@@ -283,6 +283,9 @@ case ${HOST_CC_MACHINE} in
         CONFIG_HOST_ARCH=x86_64 CONFIG_HOST=OpenBSD
         CONFIG_HVT_TENDER=1
         ;;
+    x86_64-*darwin*)
+        CONFIG_HOST_ARCH=x86_64 CONFIG_HOST=Darwin
+        ;;
     *)
         die "Unsupported host toolchain: ${HOST_CC_MACHINE}"
         ;;
