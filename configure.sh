@@ -487,6 +487,8 @@ case ${CONFIG_HOST} in
         TARGET_LD_LDFLAGS="-nopie"
         TARGET_CC_CFLAGS="-fno-emulated-tls"
         ;;
+    Darwin)
+        ;;
     *)
         die "Unsupported host system: ${CONFIG_HOST}"
         ;;
