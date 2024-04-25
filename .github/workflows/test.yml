@@ -5,7 +5,10 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        brew install x86_64-elf-gcc x86_64-elf-binutils
     - name: Build
       run: |
-        ./configure.sh
+        env TARGET_CC=x86_64-elf-gcc TARGET_LD=x86_64-elf-ld TARGET_OBJCOPY=x86_64-elf-objcopy ./configure.sh
         make V=1
