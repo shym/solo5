@@ -286,6 +286,9 @@ case ${HOST_CC_MACHINE} in
     x86_64-*darwin*)
         CONFIG_HOST_ARCH=x86_64 CONFIG_HOST=Darwin
         ;;
+    arm64-*darwin*)
+        CONFIG_HOST_ARCH=aarch64 CONFIG_HOST=Darwin
+        ;;
     *)
         die "Unsupported host toolchain: ${HOST_CC_MACHINE}"
         ;;
