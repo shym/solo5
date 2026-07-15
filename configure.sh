@@ -324,6 +324,9 @@ case ${HOST_CC_MACHINE} in
             echo "#undef HAVE_VMM_H" >tenders/hvt/hvt_openbsd_config.h
         fi
         ;;
+    arm64-*darwin*|aarch64-*darwin*)
+        CONFIG_HOST_ARCH=aarch64 CONFIG_HOST=Darwin
+        ;;
     *)
         die "Unsupported host toolchain: ${HOST_CC_MACHINE}"
         ;;
@@ -460,7 +463,6 @@ case ${TARGET_CC_MACHINE} in
         ;;
 esac
 
-TARGET_CC_CFLAGS=
 TARGET_CC_IS_OPENBSD=
 if CC="${TARGET_CC}" cc_is_clang; then
     TARGET_CC_CFLAGS=-nostdlibinc
@@ -542,6 +544,11 @@ case ${CONFIG_HOST} in
                 die "gcc 9+ or clang required on DragonFly"
             fi
         fi
+        ;;
+    Darwin)
+        TARGET_LD="${TARGET_LD:-ld.lld}"
+        TARGET_OBJCOPY="${TARGET_OBJCOPY:-llvm-objcopy}"
+        TARGET_CC_LDFLAGS="-Wl,--build-id=none,-no-pie"
         ;;
     *)
         die "Unsupported host system: ${CONFIG_HOST}"
