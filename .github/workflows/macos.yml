@@ -12,11 +12,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v7
     - name: Install dependencies
-      run: brew install llvm lld
+      run: brew install llvm lld libelf
     - name: Build and install
       run: |
         ./configure.sh --prefix="$HOME/.local" \
-          --path-prepend="$(brew --prefix llvm)/bin:$(brew --prefix lld)/bin:" \
-          --disable-elftool
+          --path-prepend="$(brew --prefix llvm)/bin:$(brew --prefix lld)/bin:"
         make V=1
         make V=1 install
