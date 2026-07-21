@@ -21,6 +21,9 @@ $(error TOPDIR must be set, run $(MAKE) from the top of the source tree or set i
 endif
 include $(TOPDIR)/Makefile.common
 
+HOSTCFLAGS += $(CONFIG_ELF_CFLAGS)
+HOSTLDLIBS += $(CONFIG_ELF_LDLIBS)
+
 .PHONY: all
 all:
 all_TARGETS :=
