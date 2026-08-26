@@ -173,6 +173,10 @@ expect_success() {
   [ "$status" -eq 0 ] && [[ "$output" == *"SUCCESS"* ]]
 }
 
+guest_mem_mb() {
+  echo "$output" | sed -n 's/^Solo5: Memory map: \([0-9][0-9]*\) MB addressable.*/\1/p'
+}
+
 virtio_expect_success() {
   [ "$status" -eq 0 -o "$status" -eq 2 -o "$status" -eq 83 ] && \
     [[ "$output" == *"SUCCESS"* ]]
@@ -690,16 +694,24 @@ xen_expect_abort() {
   expect_success
 }
 
-@test "net_ring memory" {
+@test "net_ring memory hvt" {
   skip_unless_root
-  hvt_run --net:service0=${NET2} -- test_net_mtu/test_net_mtu.hvt
-  [[ "$output" == *"Memory map: 30 MB addressable"* ]]
-  expect_success
+  local mem=32
 
-  run ${TIMEOUT} --foreground 60s "${HVT_TENDER}" --mem=32 --no-net-ring \
+  run ${TIMEOUT} --foreground 60s "${HVT_TENDER}" --mem=${mem} \
     --net:service0=${NET2} -- test_net_mtu/test_net_mtu.hvt
-  [[ "$output" == *"Memory map: 32 MB addressable"* ]]
   expect_success
+  local with_ring=$(guest_mem_mb)
+
+  run ${TIMEOUT} --foreground 60s "${HVT_TENDER}" --mem=${mem} --no-net-ring \
+    --net:service0=${NET2} -- test_net_mtu/test_net_mtu.hvt
+  expect_success
+  local without_ring=$(guest_mem_mb)
+
+  [ "${without_ring}" = "${mem}" ]
+  [ -n "${with_ring}" ]
+  [ "${with_ring}" -lt "${without_ring}" ]
+  [ $(( with_ring % 2 )) -eq 0 ] # must be aligned
 }
 
 @test "dumpcore hvt" {
