@@ -690,6 +690,18 @@ xen_expect_abort() {
   expect_success
 }
 
+@test "net_ring memory" {
+  skip_unless_root
+  hvt_run --net:service0=${NET2} -- test_net_mtu/test_net_mtu.hvt
+  [[ "$output" == *"Memory map: 30 MB addressable"* ]]
+  expect_success
+
+  run ${TIMEOUT} --foreground 60s "${HVT_TENDER}" --mem=32 --no-net-ring \
+    --net:service0=${NET2} -- test_net_mtu/test_net_mtu.hvt
+  [[ "$output" == *"Memory map: 32 MB addressable"* ]]
+  expect_success
+}
+
 @test "dumpcore hvt" {
   [ "${CONFIG_HOST_ARCH}" = "x86_64" ] || skip "not implemented for ${CONFIG_HOST_ARCH}"
   skip_unless_host_is Linux FreeBSD
