@@ -229,7 +229,7 @@ int main(int argc, char **argv)
             argc--;
             argv++;
         }
-	if (strcmp("--no-net-ring", *argv) == 0) {
+	if (strncmp("--no-net-ring", *argv, 14) == 0) {
 	    no_net_ring = 1;
 	    matched = 1;
 	    argc--;
