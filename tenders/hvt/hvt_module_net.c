@@ -83,9 +83,12 @@ void hvt_net_reserve_ring(struct hvt *hvt, struct mft *mft)
     if (reserve == 0) /* no net devices */
         return;
 
-    if (reserve >= hvt->guest_mem_size
-        || hvt->guest_mem_size - reserve < HVT_GUEST_MIN_BASE + HVT_GUEST_MIN_FREE) {
-        warnx("Not enough guest memory to reserve %zu bytes for the net ring buffer, falling back to hypercall-based I/O", reserve);
+    if (reserve >= hvt->guest_mem_size ||
+        hvt->guest_mem_size - reserve <
+            HVT_GUEST_MIN_BASE + HVT_GUEST_MIN_FREE) {
+        warnx("Not enough guest memory to reserve %zu bytes for the net ring "
+              "buffer, falling back to hypercall-based I/O",
+              reserve);
         return;
     }
 

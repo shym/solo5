@@ -229,12 +229,12 @@ int main(int argc, char **argv)
             argc--;
             argv++;
         }
-	if (strncmp("--no-net-ring", *argv, sizeof("--no-net-ring")) == 0) {
-	    no_net_ring = 1;
-	    matched = 1;
-	    argc--;
-	    argv++;
-	}
+        if (strncmp("--no-net-ring", *argv, sizeof("--no-net-ring")) == 0) {
+            no_net_ring = 1;
+            matched = 1;
+            argc--;
+            argv++;
+        }
         if (handle_cmdarg(*argv, mft) == 0) {
             /* Handled by module, consume and go on to next arg */
             matched = 1;
@@ -262,7 +262,8 @@ int main(int argc, char **argv)
     hvt_mem_size(&mem_size);
     struct hvt *hvt = hvt_init(mem_size);
 
-    if (no_net_ring == 0) hvt_net_reserve_ring(hvt, mft);
+    if (no_net_ring == 0)
+        hvt_net_reserve_ring(hvt, mft);
     elf_load(elf_fd, elf_filename, hvt->mem, hvt->guest_mem_size,
              HVT_GUEST_MIN_BASE, hvt_guest_mprotect, hvt, &gpa_ep, &gpa_kend);
     close(elf_fd); /* Done with ELF binary */
