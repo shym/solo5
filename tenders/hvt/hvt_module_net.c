@@ -61,6 +61,9 @@ static struct mft *host_mft;
 static volatile int io_thread_stop;
 static hvt_gpa_t reserved_ring_gpa;
 
+/* Minimum amount of memory, 512KB */
+#define HVT_GUEST_MIN_FREE 0x80000
+
 size_t hvt_net_mem_overhead(struct mft *mft)
 {
     for (unsigned i = 0; i != mft->entries; i++) {
@@ -80,8 +83,12 @@ void hvt_net_reserve_ring(struct hvt *hvt, struct mft *mft)
     if (reserve == 0) /* no net devices */
         return;
 
-    if (hvt->guest_mem_size < 2 * reserve) {
-        warnx("Not enough guest memory for ring allocation");
+    if (reserve >= hvt->guest_mem_size ||
+        hvt->guest_mem_size - reserve <
+            HVT_GUEST_MIN_BASE + HVT_GUEST_MIN_FREE) {
+        warnx("Not enough guest memory to reserve %zu bytes for the net ring "
+              "buffer, falling back to hypercall-based I/O",
+              reserve);
         return;
     }
 
