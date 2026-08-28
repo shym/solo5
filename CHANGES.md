@@ -1,7 +1,13 @@
-## Unreleased
+## v0.13.0 (2026-08-28)
 
+- Fix the compilation on Alpine and pass `-no-pie` option outside the `-Wl`
+  linker option (#667 @Zaneham, review by @hannesm and @Firobe)
+- Introduce a new `solo5-hvt` option `--no-net-ring` and allow on Linux to not
+  use the net ring buffer. Also, move under the asked memory amount such net
+  ring buffer (to not use more than what we want, spotted by @hannesm, see #669)
+  (#670 @dinosaure, review by @hannesm, @reynir, @palainp and @pocopepe)
 - Add riscv64 support to the spt target, and a build-only CI job for it
-  (#668 @Zaneham)
+  (#668 @Zaneham, review by @hannesm and @dinosaure)
 
 ## v0.12.1 (2026-08-12)
 
@@ -59,9 +65,10 @@
   per second), whilst no regression was observed for the latter (though no
   improvement either).
 
-  This change **does not involve** a breaking ABI change, meaning that the tender can
-  still run unikernels that have not been compiled with this version and vice
-  versa (a unikernel compiled with this version can be run by an older tender).
+  This change **does not involve** a breaking ABI change, meaning that the
+  tender can still run unikernels that have not been compiled with this version
+  and vice versa (a unikernel compiled with this version can be run by an older
+  tender).
 - `solo5-hvt` set-up `seccomp` filters
   (@pocopepe, @dinosaure, @hannesm, #638, #282)
 
