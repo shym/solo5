@@ -109,12 +109,6 @@ SECTIONS {
         *(.got.plt)
         *(.got)
     } :data
-    .data :
-    {
-        *(.data)
-        *(.data.*)
-    }
-
     . = ALIGN(CONSTANT(MAXPAGESIZE));
     /*
      * tdata and tbss have to be side by side to help the linker calculate the
@@ -127,6 +121,19 @@ SECTIONS {
         . = ALIGN(CONSTANT(MAXPAGESIZE));
     } :tdata
 
+    /* Read-write data (uninitialized) */
+    .tbss :
+    {
+        *(.tbss)
+    } :tbss
+    .data :
+    {
+        *(.data)
+        *(.data.*)
+    }
+
+    . = ALIGN(CONSTANT(MAXPAGESIZE));
+
     /*
      * _edata is the address of the end of the area to be copied with multiboot
      * (virtio and xen)
@@ -134,10 +141,6 @@ SECTIONS {
     _edata = .;
 
     /* Read-write data (uninitialized) */
-    .tbss :
-    {
-        *(.tbss)
-    } :tbss
     .bss :
     {
         *(.bss)
