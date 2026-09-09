@@ -4,6 +4,10 @@ on:
     branches:
       - main
   pull_request:
+
+# Restrict the GITHUB_TOKEN
+permissions: {}
+
 jobs:
   Build:
     name: RISCV64
