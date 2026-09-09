@@ -1,0 +1,3 @@
+__GNUC__
+__GNUC_MINOR__
+__GNUC_PATCHLEVEL__

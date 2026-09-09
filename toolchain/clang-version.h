@@ -1,0 +1,3 @@
+__clang_major__
+__clang_minor__
+__clang_patchlevel__
