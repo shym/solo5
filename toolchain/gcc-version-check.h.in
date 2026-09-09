@@ -2,5 +2,6 @@
   __GNUC__ != @@MAJOR@@ || \
   __GNUC_MINOR__ != @@MINOR@@ || \
   __GNUC_PATCHLEVEL__ != @@PATCHLEVEL@@
-#warning "This Solo5 toolchain expects another C compiler version: reinstall it."
+#warning "This Solo5 toolchain expects another C compiler version:\
+ reinstall the opam @@PACKAGE@@ package."
 #endif

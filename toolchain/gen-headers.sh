@@ -67,11 +67,13 @@ gen_compiler_version_check()
     sed -e "s/@@MAJOR@@/$major/" \
       -e "s/@@MINOR@@/$minor/" \
       -e "s/@@PATCHLEVEL@@/$patchlevel/" \
+      -e "s/@@PACKAGE@@/$3/" \
       "$1"-version-check.h.in > "$2"/solo5-compiler-check.h
 }
 
-[ "$#" -ne 1 ] && die "Missing DESTDIR"
+[ "$#" -ne 2 ] && die "Usage $0 <DESTDIR> <PACKAGE>"
 DESTDIR=$1
+PACKAGE=$2
 . ../Makeconf.sh || die "Can't find ../Makeconf.sh"
 
 mkdir -p ${DESTDIR} || die "mkdir failed"
@@ -105,7 +107,7 @@ if CC=${CONFIG_TARGET_CC} cc_is_clang; then
             ;;
     esac
     ${CONFIG_TARGET_CC} -E -P clang-version.h | \
-      gen_compiler_version_check clang "${DESTDIR}"
+      gen_compiler_version_check clang "${DESTDIR}" "${PACKAGE}"
 else
     # For GCC there isn't an equivalent of -nostdlibinc, so we need to
     # appropriate all of its internal headers.
@@ -114,7 +116,7 @@ else
     cp -R "${SRCDIR}/." ${DESTDIR} || \
         die "Failure copying host headers"
     ${CONFIG_TARGET_CC} -E -P gcc-version.h | \
-      gen_compiler_version_check gcc "${DESTDIR}"
+      gen_compiler_version_check gcc "${DESTDIR}" "${PACKAGE}"
 fi
 
 cleanup
