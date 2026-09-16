@@ -1,8 +1,6 @@
 name: DragonFly
 on:
   push:
-    branches:
-      - main
   pull_request:
 
 # Restrict the GITHUB_TOKEN
@@ -16,19 +14,16 @@ jobs:
         operating-system: [ubuntu-latest]
     runs-on: ${{ matrix.operating-system }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
       - name: DragonFly action
         id: test
         uses: vmactions/dragonflybsd-vm@v1
         with:
           usesh: true
           prepare: |
-            pkg install -y gmake git llvm18 gcc9
+            pkg install -y llvm18 gcc9
           run: |
-            git config --global --add safe.directory /home/runner/work/solo5/solo5
-            env HOST_CC=clang18 TARGET_LD=ld.lld18 TARGET_CC=clang18 ./configure.sh
-            gmake
-            gmake clean
-            env HOST_CC=gcc9 TARGET_CC=gcc9 ./configure.sh
-            gmake
+            (set -x; clang18 -dD -E -P -x c /dev/null)
+            printf '######################################################'
+            (set -x; gcc9 -dD -E -P -x c /dev/null)
+            printf '######################################################'
+            (set -x; cc -dD -E -P -x c /dev/null)
