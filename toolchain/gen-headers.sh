@@ -160,4 +160,7 @@ fi
 printf %s "$cpp_test" | ${CONFIG_TARGET_CC} -E -P -x c - | sed '/^$/d' | \
   gen_compiler_version_check "${PACKAGE}" > "${DESTDIR}/solo5-compiler-check.h"
 
+echo DEBUG
+cat "${DESTDIR}/solo5-compiler-check.h"
+
 cleanup
