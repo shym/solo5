@@ -42,7 +42,7 @@ L="$(realpath $0 | xargs dirname)/../lib/@@CONFIG_TARGET_TRIPLE@@"
 # default to cc as linker, unless we see args to the contrary
 M=link
 # cc as linker with no -z solo5-abi= defaults to stub
-B=
+B=stub
 Z=
 for arg do
     shift
