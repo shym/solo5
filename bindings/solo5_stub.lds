@@ -115,7 +115,6 @@ SECTIONS {
         *(.data.*)
     }
 
-    . = ALIGN(CONSTANT(MAXPAGESIZE));
     /*
      * tdata and tbss have to be side by side to help the linker calculate the
      * various __thread variables offsets.
@@ -124,7 +123,6 @@ SECTIONS {
     {
         _stdata = .;
         *(.tdata)
-        . = ALIGN(CONSTANT(MAXPAGESIZE));
     } :tdata
 
     /*
@@ -144,7 +142,6 @@ SECTIONS {
         *(COMMON)
     } :bss
 
-    . = ALIGN(CONSTANT(MAXPAGESIZE));
     _ebss = .;
     _end = .;
 
