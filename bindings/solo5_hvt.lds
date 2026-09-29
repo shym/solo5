@@ -42,7 +42,7 @@ PHDRS {
                               FLAGS values come from PF_x in elf.h */
     rodata PT_LOAD FLAGS(4);
     data PT_LOAD FLAGS(6);
-    tls PT_TLS;
+    tls PT_TLS FLAGS(6);
     bss PT_LOAD FLAGS(6);
     note.not_openbsd PT_NOTE; /* Must come first. */
     note.abi PT_NOTE;
@@ -117,7 +117,7 @@ SECTIONS {
         _stdata = .;
         *(.tdata)
         . = ALIGN(CONSTANT(MAXPAGESIZE));
-    } :tls :data
+    } :tls
     /*
      * _edata is the address of the end of the area to be copied with multiboot
      * (virtio and xen)
@@ -127,7 +127,7 @@ SECTIONS {
     .tbss :
     {
         *(.tbss)
-    } :tls :bss
+    } :tls
     .bss :
     {
         *(.bss)

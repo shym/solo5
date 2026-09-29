@@ -51,7 +51,7 @@ PHDRS {
 
     rodata PT_LOAD FLAGS(4);
     data PT_LOAD FLAGS(6);
-    tls PT_TLS;
+    tls PT_TLS FLAGS(6);
     bss PT_LOAD FLAGS(6);
     note.not_openbsd PT_NOTE; /* Must come first. */
 #if defined(SOLO5_XEN)
@@ -184,7 +184,7 @@ SECTIONS {
         _stdata = .;
         *(.tdata)
         . = ALIGN(CONSTANT(MAXPAGESIZE));
-    } :tls :data
+    } :tls
 
     /*
      * _edata is the address of the end of the area to be copied with multiboot
@@ -196,7 +196,7 @@ SECTIONS {
     .tbss :
     {
         *(.tbss)
-    } :tls :bss
+    } :tls
     .bss :
     {
         *(.bss)
