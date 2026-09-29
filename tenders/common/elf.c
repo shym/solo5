@@ -266,7 +266,7 @@ void elf_load(int bin_fd, const char *bin_name, uint8_t *mem, size_t mem_size,
     }
 
     /*
-     * Load all program segments with the PT_LOAD directive.
+     * Load all program segments with the PT_LOAD and PT_TLS directives.
      */
     e_end = 0;
     Elf64_Addr plast_vaddr = 0;
@@ -278,9 +278,10 @@ void elf_load(int bin_fd, const char *bin_name, uint8_t *mem, size_t mem_size,
         Elf64_Addr temp, p_vaddr_start, p_vaddr_end;
 
         /*
-         * consider only non empty PT_LOAD
+         * consider only non empty PT_LOAD and PT_TLS
          */
-        if (phdr[ph_i].p_filesz == 0 || phdr[ph_i].p_type != PT_LOAD)
+        if (phdr[ph_i].p_filesz == 0 ||
+            (phdr[ph_i].p_type != PT_LOAD && phdr[ph_i].p_type != PT_TLS))
             continue;
 
         if (p_vaddr < p_min_loadaddr) {
