@@ -280,8 +280,7 @@ void elf_load(int bin_fd, const char *bin_name, uint8_t *mem, size_t mem_size,
         /*
          * consider only non empty PT_LOAD and PT_TLS
          */
-        if (phdr[ph_i].p_filesz == 0 ||
-            (phdr[ph_i].p_type != PT_LOAD && phdr[ph_i].p_type != PT_TLS))
+        if (phdr[ph_i].p_filesz == 0 || phdr[ph_i].p_type != PT_LOAD)
             continue;
 
         if (p_vaddr < p_min_loadaddr) {
