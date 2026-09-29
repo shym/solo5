@@ -1,5 +1,11 @@
+/* SPDX-License-Identifier: ISC
+ * Copyright (c) 2015-2026 Contributors as noted in the AUTHORS file */
+
+/* This file is generated, do not edit!
+   Edit its source, solo5.lds, instead */
+
 /*
- * Copyright (c) 2015-2019 Contributors as noted in the AUTHORS file
+ * Copyright (c) 2015-2026 Contributors as noted in the AUTHORS file
  *
  * This file is part of Solo5, a sandboxed execution environment.
  *
@@ -17,18 +23,15 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-
 /*
- * This is the custom linker script for the Solo5 'hvt' target.
+ * This is the custom linker script for the Solo5 targets.
  *
  * The script is tested to work with a minimal set of input sections. If there
  * are unexpected input sections not named here, the result will probably not be
  * correct.
  */
 TEXT_START = 0x100000;
-
 ENTRY(_start)
-
 /*
  * Program headers: In order to force the linker to place each of our NOTEs
  * into a separate PT_NOTE header, we need to lay these out explicitly.
@@ -38,43 +41,35 @@ PHDRS {
     text PT_LOAD FLAGS(1); /* No FILEHDR or PHDRS, force E only.
                               FLAGS values come from PF_x in elf.h */
     rodata PT_LOAD FLAGS(4);
-
-    data PT_LOAD;
-    tdata PT_LOAD FLAGS(4); /* RO: this have to be copied into each thread */
-    tbss PT_TLS FLAGS(0); /* no perm needed */
-    bss PT_LOAD;
+    data PT_LOAD FLAGS(6);
+    tls PT_TLS;
+    bss PT_LOAD FLAGS(6);
     note.not_openbsd PT_NOTE; /* Must come first. */
     note.abi PT_NOTE;
     note.manifest PT_NOTE;
 }
-
 /*
  * Output sections.
  */
 SECTIONS {
     . = TEXT_START; /* No + SIZEOF_HEADERS */
-
     /*
-     * :text: The following input sections are placed in the E :text segment.
+     * :text: The following input sections are placed in the :text segment.
      */
     _stext = .;
-
     .interp : {
         *(.interp)
     } :interp :text
-
     .text :
     {
         *(.text)
         *(.text.*)
     } :text
-
     . = ALIGN(CONSTANT(MAXPAGESIZE));
     _etext = .;
-
     /* Read-only data */
-
-    /* For Hvt, the ABI and MFT NOTEs are read-only and can be in :rodata. */
+    /* For Hvt, Spt and Muen, the ABI and MFT NOTEs are read-only and can be in
+     * :rodata. */
     .note.solo5.manifest :
     {
         *(.note.solo5.manifest*)
@@ -87,7 +82,6 @@ SECTIONS {
     {
         *(.note.solo5.not_openbsd*)
     } :rodata :note.not_openbsd
-
     .rodata :
     {
         *(.rodata)
@@ -96,15 +90,12 @@ SECTIONS {
     .eh_frame :
     {
         *(.eh_frame)
-    }
-
+    } :rodata
     . = ALIGN(CONSTANT(MAXPAGESIZE));
     _erodata = .;
-
     /*
      * :data: The following input sections are placed in the R/W :data segment.
      */
-
     /* Read-write data (initialized) */
     .got :
     {
@@ -115,8 +106,7 @@ SECTIONS {
     {
         *(.data)
         *(.data.*)
-    }
-
+    } :data
     . = ALIGN(CONSTANT(MAXPAGESIZE));
     /*
      * tdata and tbss have to be side by side to help the linker calculate the
@@ -127,35 +117,30 @@ SECTIONS {
         _stdata = .;
         *(.tdata)
         . = ALIGN(CONSTANT(MAXPAGESIZE));
-    } :tdata
-
+    } :tls :data
     /*
      * _edata is the address of the end of the area to be copied with multiboot
      * (virtio and xen)
      */
     _edata = .;
-
     /* Read-write data (uninitialized) */
     .tbss :
     {
         *(.tbss)
-    } :tbss
+    } :tls :bss
     .bss :
     {
         *(.bss)
         *(COMMON)
     } :bss
-
     . = ALIGN(CONSTANT(MAXPAGESIZE));
     _ebss = .;
     _end = .;
-
     /* We are not building a GNU executable, so discard any default NOTEs the
        toolchain might generate to prevent any surprises in the final layout. */
     /DISCARD/ : {
         *(.note.gnu.*)
     }
-
-    _ltdata = _edata - _stdata;
+    _ltdata = SIZEOF(.tdata);
     _ltbss = SIZEOF(.tbss);
 }
