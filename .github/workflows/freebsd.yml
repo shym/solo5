@@ -1,8 +1,6 @@
 name: FreeBSD
 on:
   push:
-    branches:
-      - main
   pull_request:
 
 # Restrict the GITHUB_TOKEN
