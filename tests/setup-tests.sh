@@ -31,9 +31,6 @@ if [ $(id -u) -ne 0 ]; then
     exit 1
 fi
 
-printf 'DEBUG uname: '
-uname -s
-
 case `uname -s` in
 Linux)
     set -xe
