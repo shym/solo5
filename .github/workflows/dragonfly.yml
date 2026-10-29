@@ -22,6 +22,7 @@ jobs:
             pkg install -y gmake git llvm18 gcc9 sudo bash
           run: |
             git config --global --add safe.directory /home/runner/work/solo5/solo5
+            set -x
             env HOST_CC=clang18 TARGET_LD=ld.lld18 TARGET_CC=clang18 ./configure.sh
             gmake
             cd tests
