@@ -64,9 +64,7 @@ OpenBSD)
     ifconfig tap102 inet 10.2.0.1 netmask 255.255.255.0 mtu 9000
     ;;
 DragonFly)
-    kldload vmm
-    kldload if_tap
-    kldload nmdm
+    kldload nvmm
     sysctl -w net.link.tap.up_on_open=1
     ifconfig tap100 create 10.0.0.1/24 link0 up
     ifconfig tap101 create 10.1.0.1/24 link0 up
