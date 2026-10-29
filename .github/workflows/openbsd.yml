@@ -1,6 +1,8 @@
 name: OpenBSD amd64
 on:
   push:
+    branches:
+      - main
   pull_request:
 
 # Restrict the GITHUB_TOKEN
