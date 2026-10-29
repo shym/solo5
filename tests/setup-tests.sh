@@ -60,6 +60,7 @@ OpenBSD)
     )
     ifconfig tap100 inet 10.0.0.1 netmask 255.255.255.0
     ifconfig tap101 inet 10.1.0.1 netmask 255.255.255.0
+    ifconfig tap102 inet 10.2.0.1 netmask 255.255.255.0 mtu 9000
     ;;
 *)
     exit 1
