@@ -20,6 +20,8 @@ jobs:
           usesh: true
           prepare: |
             pkg_add gmake git bash sudo-1.9.17.2p1
+          # ^ Unfortunately, pkg_add fails to install just `sudo` as multiple
+          # variants are available
           run: |
             git config --global --add safe.directory /home/runner/work/solo5/solo5
             set -x
