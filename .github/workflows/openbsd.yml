@@ -19,7 +19,7 @@ jobs:
         with:
           usesh: true
           prepare: |
-            pkg_add -z gmake git sudo bash
+            pkg_add gmake git bash sudo-1.9.17.2p1
           run: |
             git config --global --add safe.directory /home/runner/work/solo5/solo5
             set -x
