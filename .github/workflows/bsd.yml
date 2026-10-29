@@ -13,13 +13,17 @@ jobs:
       matrix:
         include:
           - OS: FreeBSD
+            vm: vmactions/freebsd-vm@v1
             pkgs: pkg install -y pkgconf gmake git
           - OS: OpenBSD
+            vm: vmactions/openbsd-vm@v1
             pkgs: pkg_add gmake git
           - OS: DragonFly (Clang)
+            vm: vmactions/dragonflybsd-vm@v1
             pkgs: pkg install -y gmake git llvm18
             prefix_cfg: env HOST_CC=clang18 TARGET_LD=ld.lld18 TARGET_CC=clang18
           - OS: DragonFly (GCC)
+            vm: vmactions/dragonflybsd-vm@v1
             pkgs: pkg install -y gmake git gcc9
             prefix_cfg: env HOST_CC=gcc9 TARGET_CC=gcc9
     runs-on: ubuntu-latest
@@ -28,10 +32,7 @@ jobs:
         uses: actions/checkout@v7
       - name: Run ${{ matrix.OS }} in a VM
         id: test
-        uses: |
-          ${{ case( matrix.OS == 'FreeBSD', 'vmactions/freebsd-vm@v1',
-                    matrix.OS == 'OpenBSD', 'vmactions/openbsd-vm@v1',
-                    'vmactions/dragonflybsd-vm@v1') }}
+        uses: ${{ matrix.vm }}
         with:
           usesh: true
           prepare: |
