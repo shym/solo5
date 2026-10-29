@@ -29,9 +29,9 @@ jobs:
       - name: Run ${{ matrix.OS }} in a VM
         id: test
         uses: |
-          ${{ case(matrix.OS == 'FreeBSD','vmactions/freebsd-vm@v1',
-                   matrix.OS == 'OpenBSD','vmactions/openbsd-vm@v1',
-                   'vmactions/dragonflybsd-vm@v1') }}
+          ${{ case( matrix.OS == 'FreeBSD', 'vmactions/freebsd-vm@v1',
+                    matrix.OS == 'OpenBSD', 'vmactions/openbsd-vm@v1',
+                    'vmactions/dragonflybsd-vm@v1') }}
         with:
           usesh: true
           prepare: |
@@ -39,5 +39,5 @@ jobs:
           run: |
             git config --global --add safe.directory /home/runner/work/solo5/solo5
             set -x
-            ${{ prefix_cfg }} ./configure.sh
+            ${{ matrix.prefix_cfg }} ./configure.sh
             gmake
