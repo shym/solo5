@@ -1,0 +1,45 @@
+name: BSD VMs
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+# Restrict the GITHUB_TOKEN
+permissions: {}
+
+jobs:
+  Build:
+    name: ${{ matrix.OS }} on x86_64
+    strategy:
+      matrix:
+        include:
+          - OS: FreeBSD
+            pkgs: pkg install -y pkgconf gmake git
+          - OS: OpenBSD
+            pkgs: pkg_add gmake git
+          - OS: DragonFly (Clang)
+            pkgs: pkg install -y gmake git llvm18
+            prefix_cfg: env HOST_CC=clang18 TARGET_LD=ld.lld18 TARGET_CC=clang18
+          - OS: DragonFly (GCC)
+            pkgs: pkg install -y gmake git gcc9
+            prefix_cfg: env HOST_CC=gcc9 TARGET_CC=gcc9
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+      - name: Run ${{ matrix.OS }} in a VM
+        id: test
+        uses: |
+          ${{ case(matrix.OS == 'FreeBSD','vmactions/freebsd-vm@v1',
+                   matrix.OS == 'OpenBSD','vmactions/openbsd-vm@v1',
+                   'vmactions/dragonflybsd-vm@v1') }}
+        with:
+          usesh: true
+          prepare: |
+            ${{ matrix.pkgs }}
+          run: |
+            git config --global --add safe.directory /home/runner/work/solo5/solo5
+            set -x
+            ${{ prefix_cfg }} ./configure.sh
+            gmake
