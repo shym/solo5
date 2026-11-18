@@ -622,14 +622,18 @@ xen_expect_abort() {
   # This test is flaky on FreeBSD and OpenBSD, because some packets are often
   # dropped, at least when running on slow VMs, so let's ignore those failures
   # when SOLO5_SKIP_TESTS contains "net hvt"
-  if [ "$status" -ne 0 ]; then
-    case "${CONFIG_HOST},${SOLO5_SKIP_TESTS}" in
-      FreeBSD,*"net hvt"*|OpenBSD,*"net hvt"*)
+  case "${CONFIG_HOST},${SOLO5_SKIP_TESTS}" in
+    FreeBSD,*"net hvt"*|OpenBSD,*"net hvt"*)
+      if [ "$status" -ne 0 ]; then
         skip "flaky, ignored"
-        ;;
-    esac
-  fi
-  expect_success
+      else
+        expect_success
+      fi
+      ;;
+    *)
+      expect_success
+      ;;
+  esac
 }
 
 @test "net virtio" {
