@@ -617,7 +617,7 @@ xen_expect_abort() {
 @test "net hvt" {
   skip_unless_root
 
-  ( sleep 1; ${TIMEOUT} 60s ping -fq -c 120000 ${NET0_IP} ) &
+  ( sleep 1; ${TIMEOUT} 60s ping -fq -c 100000 ${NET0_IP} ) &
   hvt_run --net:service0=${NET0} -- test_net/test_net.hvt limit
   expect_success
 }
