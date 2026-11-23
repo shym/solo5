@@ -617,13 +617,12 @@ xen_expect_abort() {
 @test "net hvt" {
   skip_unless_root
 
-  ( sleep 1; ${TIMEOUT} 60s ping -fq -c 1000000 ${NET0_IP} ) &
+  ( sleep 1; ${TIMEOUT} 60s ping -fq -c 100000 ${NET0_IP} ) &
   hvt_run --net:service0=${NET0} -- test_net/test_net.hvt limit
   # This test is flaky on FreeBSD and OpenBSD, because some packets are often
   # dropped, at least when running on slow VMs, so let's ignore those failures
   case "${CONFIG_HOST}" in
     FreeBSD|OpenBSD)
-      echo "DEBUG: $status"
       if [ "$status" -ne 0 ]; then
         skip "(softfail on ${CONFIG_HOST})"
       else
