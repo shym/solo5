@@ -315,6 +315,12 @@ case ${HOST_CC_MACHINE} in
         CONFIG_HOST_ARCH=x86_64 CONFIG_HOST=OpenBSD
         CONFIG_HVT_TENDER=1
         ;;
+    arm64-*darwin*|aarch64-*darwin*)
+        CONFIG_HOST_ARCH=aarch64 CONFIG_HOST=Darwin
+        ;;
+    x86_64-*darwin*|amd64-*darwin*)
+        CONFIG_HOST_ARCH=x86_64 CONFIG_HOST=Darwin
+        ;;
     *)
         die "Unsupported host toolchain: ${HOST_CC_MACHINE}"
         ;;
@@ -403,6 +409,19 @@ fi
 #
 # Configure target toolchain and bindings based on TARGET_{CC,LD,OBJCOPY}.
 #
+case ${CONFIG_HOST} in
+    Darwin)
+        # On Darwin, the default toolchain is not generating ELF binaries so
+        # check that those environment variables are explicitly set
+        if ! test "${TARGET_CC:+y}${TARGET_LD:+y}${TARGET_OBJCOPY:+y}" = yyy;
+        then
+            msg="The TARGET_CC, TARGET_LD and TARGET_OBJCOPY environment"
+            msg="$msg variables should be set to an ELF toolchain"
+            die "$msg"
+        fi
+        ;;
+esac
+
 TARGET_CC="${TARGET_CC:-cc}"
 
 printf "%s: Checking that ${TARGET_CC} works: " "${prog_NAME}"
@@ -538,6 +557,10 @@ case ${CONFIG_HOST} in
             #     /usr/libexec/binutils234/elf/ld.gold: internal error in data_size
             TARGET_CC_CFLAGS="${TARGET_CC_CFLAGS} -fuse-ld=bfd"
         fi
+        ;;
+    Darwin)
+        # The toolchain must be explicitly set by the user already, so nothing
+        # to do here
         ;;
     *)
         die "Unsupported host system: ${CONFIG_HOST}"
